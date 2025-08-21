@@ -18,22 +18,14 @@ int linearTimeSearch(int *p,int size){
             return i+1;
     }
 }
-bool useBinarySearch(int *p,int size,int l){
+int binarySearch(int *p,int size){
     int s=0,e=size-1;
     while(s<=e){
         int m=s+(e-s)/2;
-        if(p[m]==l) return true;
-        else if(l>p[m]) s=m+1;
-        else e=m-1; 
+        if(p[m]==m+1)   s=m+1;
+        else e=m-1;
     }
-    return false;
-}
-int binarySearch(int *p,int size){
-    for(int i=1;i<=size;i++){
-        if(!useBinarySearch(p,size,i))
-            return i;
-    }
-    return -1;
+    return s+1;
 }
 int main(){
     int size;
