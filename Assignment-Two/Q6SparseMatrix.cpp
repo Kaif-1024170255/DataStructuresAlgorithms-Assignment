@@ -84,7 +84,48 @@ Sparse* transpose(Sparse s){
     display(*trp);
     return trp;
 }
-
+Sparse* multiply(Sparse a,Sparse b){
+    if(a.n!=b.m) return nullptr;
+    Sparse *mul=new Sparse;
+    mul->m=a.m;  mul->n=b.n;
+    mul->ele=new Element[a.nums*b.nums];
+    // MULTIPLY
+    int k=0;
+    for (int i=0;i<a.nums;i++){
+        for (int j=0;j<b.nums;j++){
+            if(a.ele[i].c==b.ele[j].r){
+                int row=a.ele[i].r;
+                int col=b.ele[j].c;
+                int val=a.ele[i].x*b.ele[j].x;
+                // Check if already exists
+                int f=-1;
+                for(int t=0;t<k;t++){
+                    if(mul->ele[t].r==row && mul->ele[t].c==col){
+                        f=t;
+                        break;
+                    }
+                }
+                if(f==-1){  //NO ENTRY EXIST
+                    mul->ele[k].r=row;
+                    mul->ele[k].c=col;
+                    mul->ele[k++].x=val;
+                }else   //ALREADY EXIST
+                    mul->ele[f].x+=val;
+            }
+        }
+    }
+    mul->nums=k;
+    // Sorting Row -> Col
+    for(int i=0; i<mul->nums-1; i++){
+        for(int j=i+1; j<mul->nums; j++){
+            if(mul->ele[i].r > mul->ele[j].r || (mul->ele[i].r == mul->ele[j].r && mul->ele[i].c > mul->ele[j].c)){
+                swap(mul->ele[i], mul->ele[j]);
+            }
+        }
+    }
+    display(*mul);
+    return mul;
+}
 int main(){
     Sparse s1;
     create(&s1);
@@ -96,5 +137,7 @@ int main(){
     display(s2);
     cout<<"\nDISPLAYING Sum : \n";
     add(s1,s2);
+    cout<<"\nDISPLAYING MultipliedMatrix : \n";
+    multiply(s1,s2);
     return 0;
 }
