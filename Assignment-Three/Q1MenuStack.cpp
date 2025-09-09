@@ -34,7 +34,7 @@ class Stack{
         if(isEmpty()){cout<<"Stack is Empty"<<endl;return;};
         cout<<"Elements from Top :\n";
         for(int i=top;i>=0;i--)
-            cout<<elements[top]<<endl;
+            cout<<elements[i]<<endl;
     }
 };
 int main(){
