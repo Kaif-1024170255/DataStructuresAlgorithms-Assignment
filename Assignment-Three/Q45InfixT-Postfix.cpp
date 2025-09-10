@@ -81,7 +81,7 @@ string infixToPostfix(string infix) {
     }
     return postfix;
 }
-int evaluatePostfix(string postfix) {
+double evaluatePostfix(string postfix) {
     Stack st(postfix.length());
     for(char ch:postfix) {
         if(isdigit(ch)) st.push(ch - '0');
@@ -108,7 +108,7 @@ int main(){
     getline(cin,inf); 
     string post=infixToPostfix(inf);
     cout<<"Postfix Expression : "<<post<<endl;
-    int result=evaluatePostfix(post);
+    double result=evaluatePostfix(post);
     cout<<"Evaluated REsult : "<<result<<endl;
     return 0;
 }
