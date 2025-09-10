@@ -1,6 +1,7 @@
 #include<string>
 #include<string.h>
 #include<iostream>
+#include <cmath>
 using namespace std;
 class Stack{
     public:
@@ -80,11 +81,34 @@ string infixToPostfix(string infix) {
     }
     return postfix;
 }
+int evaluatePostfix(string postfix) {
+    Stack st(postfix.length());
+    for(char ch:postfix) {
+        if(isdigit(ch)) st.push(ch - '0');
+        else {
+            // POP two operands
+            int op2 = st.peek(); 
+            st.pop();
+            int op1 = st.peek(); 
+            st.pop();
+            switch (ch) {
+                case '+': st.push(op1+op2); break;
+                case '-': st.push(op1-op2); break;
+                case '*': st.push(op1*op2); break;
+                case '/': st.push(op1/op2); break;
+                case '^': st.push(pow(op1, op2)); break;
+            }
+        }
+    }
+    return st.peek(); // Final result
+}
 int main(){
     string inf;
     cout<<"Enter Expression : "<<endl;
     getline(cin,inf); 
     string post=infixToPostfix(inf);
     cout<<"Postfix Expression : "<<post<<endl;
+    int result=evaluatePostfix(post);
+    cout<<"Evaluated REsult : "<<result<<endl;
     return 0;
 }
