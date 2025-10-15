@@ -1,23 +1,33 @@
 #include <iostream>
 using namespace std;
-#define MAX_SIZE 100
 
-class SimpleQueue {
+class CircularQueue {
 private:
-    int arr[MAX_SIZE];
-    int front, rear;
+    int* arr;
+    int front, rear, capacity;
+    int count;
 
 public:
-    SimpleQueue() {
+    CircularQueue(int size) {
+        capacity = size;
+        arr = new int[capacity];
         front = -1;
         rear = -1;
+        count = 0;
     }
-    bool isEmpty() {
-        return front == -1;
+
+    ~CircularQueue() {
+        delete[] arr;
     }
+
     bool isFull() {
-        return rear == MAX_SIZE - 1;
+        return (count == capacity);
     }
+
+    bool isEmpty() {
+        return (count == 0);
+    }
+
     void enqueue(int val) {
         if (isFull()) {
             cout << "Queue is full. Cannot enqueue." << endl;
@@ -26,47 +36,56 @@ public:
         if (isEmpty()) {
             front = 0;
         }
-        rear++;
+        rear = (rear + 1) % capacity;
         arr[rear] = val;
+        count++;
         cout << val << " enqueued." << endl;
     }
+
     void dequeue() {
         if (isEmpty()) {
             cout << "Queue is empty. Cannot dequeue." << endl;
             return;
         }
-        cout << arr[front] << " dequeued." << endl;
-        if (front == rear) {
+        cout << "Dequeued " << arr[front] << endl;
+        front = (front + 1) % capacity;
+        count--;
+        if (isEmpty()) {
             front = -1;
             rear = -1;
-        } else {
-            front++;
         }
     }
+
+    int peek() {
+        if (isEmpty()) {
+            cout << "Queue is empty. Cannot peek." << endl;
+            return -1;
+        }
+        return arr[front];
+    }
+
     void display() {
         if (isEmpty()) {
             cout << "Queue is empty." << endl;
             return;
         }
-        cout << "Queue elements: ";
-        for (int i = front; i <= rear; i++) {
+        cout << "Circular Queue elements: ";
+        int i = front;
+        for (int j = 0; j < count; j++) {
             cout << arr[i] << " ";
+            i = (i + 1) % capacity;
         }
         cout << endl;
     }
-    int peek() {
-        if (isEmpty()) {
-            cout << "Queue is empty." << endl;
-            return -1;
-        }
-        return arr[front];
-    }
 };
 
-void simpleQueueMenu() {
-    SimpleQueue sq;
-    int choice, val;
-    cout << "\n--- Simple Queue Menu ---" << endl;
+void circularQueueMenu() {
+    int size, choice, val;
+    cout << "\nEnter the size of the circular queue: ";
+    cin >> size;
+    CircularQueue cq(size);
+
+    cout << "\n--- Circular Queue Menu ---" << endl;
     do {
         cout << "\n1. Enqueue" << endl;
         cout << "2. Dequeue" << endl;
@@ -82,30 +101,30 @@ void simpleQueueMenu() {
             case 1:
                 cout << "Enter value to enqueue: ";
                 cin >> val;
-                sq.enqueue(val);
+                cq.enqueue(val);
                 break;
             case 2:
-                sq.dequeue();
+                cq.dequeue();
                 break;
             case 3:
-                if (sq.isEmpty()) {
+                if (cq.isEmpty()) {
                     cout << "Queue is empty." << endl;
                 } else {
                     cout << "Queue is not empty." << endl;
                 }
                 break;
             case 4:
-                if (sq.isFull()) {
+                if (cq.isFull()) {
                     cout << "Queue is full." << endl;
                 } else {
                     cout << "Queue is not full." << endl;
                 }
                 break;
             case 5:
-                sq.display();
+                cq.display();
                 break;
             case 6:
-                cout << "Front element: " << sq.peek() << endl;
+                cout << "Front element: " << cq.peek() << endl;
                 break;
             case 7:
                 cout << "Returning to main menu." << endl;
